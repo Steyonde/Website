@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auto-Close</title>
     <script>
-        window.onload = function() {
-            window.close();
-        };
+        let win = window.open("deine-seite.html", "_blank");
+        setTimeout(() => win.close(), 1000);
+
     </script>
 </head>
 <body>
