@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steyonde Minecraft Plugin Entwicklung</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Minecraft&display=swap');
+        
+        .minecraft-font {
+            font-family: 'Minecraft', sans-serif;
+        }
+        
+        .bg-minecraft {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/api/placeholder/1920/1080') center/cover no-repeat;
+        }
+        
+        .bg-stone {
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h25v25H0zM25 0h25v25H25zM50 0h25v25H50zM75 0h25v25H75zM0 25h25v25H0zM25 25h25v25H25zM50 25h25v25H50zM75 25h25v25H75zM0 50h25v25H0zM25 50h25v25H25zM50 50h25v25H50zM75 50h25v25H75zM0 75h25v25H0zM25 75h25v25H25zM50 75h25v25H50zM75 75h25v25H75z' fill='%23787878' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        .hover-up {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-up:hover {
+            transform: translateY(-5px);
+        }
+        
+        .service-card {
+            background: linear-gradient(135deg, #4c1d95 0%, #2563eb 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .service-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .bg-blur {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        
+        .text-shadow {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .animated-bg {
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            background: linear-gradient(-45deg, #5e1ab0, #2563eb, #10b981, #3b82f6);
+        }
+        
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        .lang-active {
+            color: #22c55e;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Navigation -->
+    <header class="fixed w-full bg-blur bg-opacity-70 z-50">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded bg-gradient-to-br from-green-500 to-blue-600 mr-3 flex items-center justify-center">
+                        <span class="text-white font-bold text-xl">S</span>
+                    </div>
+                    <span class="text-xl font-bold">STEYONDE</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="lang-de hover:text-green-400 transition">Home</a>
+                    <a href="#features" class="lang-de hover:text-green-400 transition">Features</a>
+                    <a href="#process" class="lang-de hover:text-green-400 transition">Prozess</a>
+                    <a href="#about" class="lang-de hover:text-green-400 transition">Über uns</a>
+                    <a href="#contact" class="lang-de hover:text-green-400 transition">Kontakt</a>
+                    
+                    <a href="#home" class="lang-en hidden hover:text-green-400 transition">Home</a>
+                    <a href="#features" class="lang-en hidden hover:text-green-400 transition">Features</a>
+                    <a href="#process" class="lang-en hidden hover:text-green-400 transition">Process</a>
+                    <a href="#about" class="lang-en hidden hover:text-green-400 transition">About Us</a>
+                    <a href="#contact" class="lang-en hidden hover:text-green-400 transition">Contact</a>
+                    
+                    <div class="border-l border-gray-600 pl-4 flex items-center space-x-3">
+                        <button id="lang-de" class="lang-active focus:outline-none">DE</button>
+                        <button id="lang-en" class="text-gray-400 hover:text-white focus:outline-none">EN</button>
+                    </div>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <div class="flex items-center mr-4 space-x-2">
+                        <button id="lang-de-mobile" class="lang-active focus:outline-none text-sm">DE</button>
+                        <button id="lang-en-mobile" class="text-gray-400 hover:text-white focus:outline-none text-sm">EN</button>
+                    </div>
+                    <button id="menu-toggle" class="focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="md:hidden hidden mt-4 pb-2">
+                <a href="#home" class="lang-de block py-2 hover:text-green-400 transition">Home</a>
+                <a href="#features" class="lang-de block py-2 hover:text-green-400 transition">Features</a>
+                <a href="#process" class="lang-de block py-2 hover:text-green-400 transition">Prozess</a>
+                <a href="#about" class="lang-de block py-2 hover:text-green-400 transition">Über uns</a>
+                <a href="#contact" class="lang-de block py-2 hover:text-green-400 transition">Kontakt</a>
+                
+                <a href="#home" class="lang-en hidden block py-2 hover:text-green-400 transition">Home</a>
+                <a href="#features" class="lang-en hidden block py-2 hover:text-green-400 transition">Features</a>
+                <a href="#process" class="lang-en hidden block py-2 hover:text-green-400 transition">Process</a>
+                <a href="#about" class="lang-en hidden block py-2 hover:text-green-400 transition">About Us</a>
+                <a href="#contact" class="lang-en hidden block py-2 hover:text-green-400 transition">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="bg-minecraft h-screen flex items-center">
+        <div class="container mx-auto px-6">
+            <div class="max-w-3xl">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 text-shadow">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">STEYONDE</span>
+                </h1>
+                <h2 class="lang-de text-3xl md:text-4xl font-bold mb-6 text-shadow">Individuelle Minecraft Plugins</h2>
+                <p class="lang-de text-xl mb-10 text-gray-300">Wir entwickeln kostenlose, maßgeschneiderte Plugins für kleine Minecraft Server - genau nach deinen Wünschen.</p>
+                
+                <h2 class="lang-en hidden text-3xl md:text-4xl font-bold mb-6 text-shadow">Custom Minecraft Plugins</h2>
+                <p class="lang-en hidden text-xl mb-10 text-gray-300">We develop free, custom-made plugins for small Minecraft servers - exactly according to your wishes.</p>
+                
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#contact" class="lang-de bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-8 py-4 rounded-lg font-bold text-center transition-all duration-300 shadow-lg hover:shadow-xl">
+                        Plugin anfragen
+                    </a>
+                    <a href="#process" class="lang-de bg-transparent border-2 border-blue-500 hover:bg-blue-500 hover:bg-opacity-20 px-8 py-4 rounded-lg font-bold text-center transition-all duration-300">
+                        Unser Prozess
+                    </a>
+                    
+                    <a href="#contact" class="lang-en hidden bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-8 py-4 rounded-lg font-bold text-center transition-all duration-300 shadow-lg hover:shadow-xl">
+                        Request a Plugin
+                    </a>
+                    <a href="#process" class="lang-en hidden bg-transparent border-2 border-blue-500 hover:bg-blue-500 hover:bg-opacity-20 px-8 py-4 rounded-lg font-bold text-center transition-all duration-300">
+                        Our Process
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-gray-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="lang-de text-3xl font-bold mb-4">Warum Steyonde wählen?</h2>
+                <h2 class="lang-en hidden text-3xl font-bold mb-4">Why Choose Steyonde?</h2>
+                <div class="w-24 h-1 bg-blue-600 mx-auto"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="bg-gray-800 p-8 rounded-xl hover-up">
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-bolt text-2xl"></i>
+                    </div>
+                    <h3 class="lang-de text-xl font-bold mb-4">Komplett kostenlos</h3>
+                    <p class="lang-de text-gray-400">Wir entwickeln alle Plugins 100% kostenlos für kleine Server, ohne versteckte Kosten oder Premium-Features.</p>
+                    
+                    <h3 class="lang-en hidden text-xl font-bold mb-4">Completely Free</h3>
+                    <p class="lang-en hidden text-gray-400">We develop all plugins 100% free of charge for small servers, with no hidden costs or premium features.</p>
+                </div>
+                <div class="bg-gray-800 p-8 rounded-xl hover-up">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-cogs text-2xl"></i>
+                    </div>
+                    <h3 class="lang-de text-xl font-bold mb-4">Maßgeschneidert</h3>
+                    <p class="lang-de text-gray-400">Jedes Plugin wird individuell nach deinen speziellen Anforderungen und Wünschen entwickelt.</p>
+                    
+                    <h3 class="lang-en hidden text-xl font-bold mb-4">Custom-Made</h3>
+                    <p class="lang-en hidden text-gray-400">Each plugin is individually developed according to your specific requirements and wishes.</p>
+                </div>
+                <div class="bg-gray-800 p-8 rounded-xl hover-up">
+                    <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-red-500 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-code text-2xl"></i>
+                    </div>
+                    <h3 class="lang-de text-xl font-bold mb-4">Optimierte Performance</h3>
+                    <p class="lang-de text-gray-400">Unsere Plugins werden für maximale Effizienz und minimalen Ressourcenverbrauch entwickelt.</p>
+                    
+                    <h3 class="lang-en hidden text-xl font-bold mb-4">Optimized Performance</h3>
+                    <p class="lang-en hidden text-gray-400">Our plugins are developed for maximum efficiency and minimal resource consumption.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section id="process" class="py-20 bg-stone">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="lang-de text-3xl font-bold mb-4">Unser Prozess</h2>
+                <h2 class="lang-en hidden text-3xl font-bold mb-4">Our Process</h2>
+                <div class="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
+                <p class="lang-de max-w-2xl mx-auto text-gray-400">So funktioniert die Zusammenarbeit mit uns:</p>
+                <p class="lang-en hidden max-w-2xl mx-auto text-gray-400">This is how collaboration with us works:</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Step 1 -->
+                <div class="relative">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 z-10 relative">
+                        <span class="text-2xl font-bold">1</span>
+                    </div>
+                    <div class="hidden md:block absolute top-8 left-1/2 w-full h-1 bg-blue-600 -z-10"></div>
+                    <div class="text-center">
+                        <h3 class="lang-de text-xl font-bold mb-3">Anfrage</h3>
+                        <p class="lang-de text-gray-400">Du beschreibst deine Plugin-Idee und Anforderungen in unserem Discord-Server.</p>
+                        
+                        <h3 class="lang-en hidden text-xl font-bold mb-3">Request</h3>
+                        <p class="lang-en hidden text-gray-400">You describe your plugin idea and requirements in our Discord server.</p>
+                    </div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="relative">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 z-10 relative">
+                        <span class="text-2xl font-bold">2</span>
+                    </div>
+                    <div class="hidden md:block absolute top-8 left-1/2 w-full h-1 bg-blue-600 -z-10"></div>
+                    <div class="text-center">
+                        <h3 class="lang-de text-xl font-bold mb-3">Planung</h3>
+                        <p class="lang-de text-gray-400">Wir besprechen die Details und planen die Funktionen und Umsetzung deines Plugins.</p>
+                        
+                        <h3 class="lang-en hidden text-xl font-bold mb-3">Planning</h3>
+                        <p class="lang-en hidden text-gray-400">We discuss the details and plan the features and implementation of your plugin.</p>
+                    </div>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="relative">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 z-10 relative">
+                        <span class="text-2xl font-bold">3</span>
+                    </div>
+                    <div class="hidden md:block absolute top-8 left-1/2 w-full h-1 bg-blue-600 -z-10"></div>
+                    <div class="text-center">
+                        <h3 class="lang-de text-xl font-bold mb-3">Entwicklung</h3>
+                        <p class="lang-de text-gray-400">Wir entwickeln dein Plugin nach deinen Wünschen und testen es gründlich.</p>
+                        
+                        <h3 class="lang-en hidden text-xl font-bold mb-3">Development</h3>
+                        <p class="lang-en hidden text-gray-400">We develop your plugin according to your wishes and test it thoroughly.</p>
+                    </div>
+                </div>
+                
+                <!-- Step 4 -->
+                <div class="relative">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 z-10 relative">
+                        <span class="text-2xl font-bold">4</span>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="lang-de text-xl font-bold mb-3">Übergabe</h3>
+                        <p class="lang-de text-gray-400">Du erhältst dein fertiges Plugin inklusive Anleitung zur Integration und Nutzung.</p>
+                        
+                        <h3 class="lang-en hidden text-xl font-bold mb-3">Delivery</h3>
+                        <p class="lang-en hidden text-gray-400">You receive your finished plugin including instructions for integration and use.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Example Projects -->
+    <section class="py-20 bg-gray-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="lang-de text-3xl font-bold mb-4">Beispielprojekte</h2>
+                <h2 class="lang-en hidden text-3xl font-bold mb-4">Example Projects</h2>
+                <div class="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
+                <p class="lang-de max-w-2xl mx-auto text-gray-400">Hier sind einige Beispiele für Plugins, die wir bereits für kleine Server erstellt haben:</p>
+                <p class="lang-en hidden max-w-2xl mx-auto text-gray-400">Here are some examples of plugins we have already created for small servers:</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Example 1 -->
+                <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg">
+                    <div class="p-6">
+                        <h3 class="lang-de text-xl font-bold mb-3">Custom Shops System</h3>
+                        <p class="lang-de text-gray-400 mb-4">Ein Shop-System für einen RPG-Server mit speziellen Währungen und benutzerdefinierten GUI-Menüs.</p>
+                        
+                        <h3 class="lang-en hidden text-xl font-bold mb-3">Custom Shops System</h3>
+                        <p class="lang-en hidden text-gray-400 mb-4">A shop system for an RPG server with special currencies and custom GUI menus.</p>
+                        
+                        <div class="flex flex-wrap">
+                            <span class="px-2 py-1 text-xs rounded-full bg-blue-900 text-blue-300 mr-2 mb-2">Economy</span>
+                            <span class="px-2 py-1 text-xs rounded-full bg-blue-900 text-blue-300 mr-2 mb-2">GUI</span>
+                            <span class="px-2 py-1 text-xs rounded-full bg-blue-900 text-blue-300 mb-2">RPG</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Example 2 -->
+                <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg">
+                    <div class="p-6">
+                        <h3 class="lang-de text-xl font-bold mb-3">Roleplay Chat System</h3>
+                        <p class="lang-de text-gray-400 mb-4">Ein komplexes Chat-System mit Reichweiten-Chat, Emotes und speziellen Rollenspiel-Funktionen.</p>
+                        
+                        <h3 class="lang-en hidden text-xl font-bold mb-3">Roleplay Chat System</h3>
+                        <p class="lang-en hidden text-gray-400 mb-4">A complex chat system with range chat, emotes, and special roleplay functions.</p>
+                        
+                        <div class="flex flex-wrap">
+                            <span class="px-2 py-1 text-xs rounded-full bg-purple-900 text-purple-300 mr-2 mb-2">Chat</span>
+                            <span class="px-2 py-1 text-xs rounded-full bg-purple-900 text-purple-300 mr-2 mb-2">Roleplay</span>
+                            <span class="px-2 py-1 text-xs rounded-full bg-purple-900 text-purple-300 mb-2">Customization</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Example 3 -->
+                <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg">
+                    <div class="p-6">
+                        <h3 class="lang-de text-xl font-bold mb-3">Fraktionen-System</h3>
+                        <p class="lang-de text-gray-400 mb-4">Ein Fraktionen-Plugin mit benutzerdefinierten Rängen, Territorien und Kriegs-Mechaniken.</p>
+                        
+                        <h3 class="lang-en hidden text-xl font-bold mb-3">Factions System</h3>
+                        <p class="lang-en hidden text-gray-400 mb-4">A factions plugin with custom ranks, territories, and war mechanics.</p>
+                        
+                        <div class="flex flex-wrap">
+                            <span class="px-2 py-1 text-xs rounded-full bg-green-900 text-green-300 mr-2 mb-2">Factions</span>
+                            <span class="px-2 py-1 text-xs rounded-full bg-green-900 text-green-300 mr-2 mb-2">PvP</span>
+                            <span class="px-2 py-1 text-xs rounded-full bg-green-900 text-green-300 mb-2">Permissions</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Example 4 -->
+                <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg">
+                    <div class="p-6">
+                        <h3 class="lang-de text-xl font-bold mb-3">Custom Minigame</h3>
+                        <p class="lang-de text-gray-400 mb-4">Ein einzigartiges Minispiel mit anpassbaren Karten, Punktesystem und Belohnungen.</p>
+                        
+                        <h3 class="lang-en hidden text-xl font-bold mb-3">Custom Minigame</h3>
+                        <p class="lang-en hidden text-gray-400 mb-4">A unique minigame with customizable maps, scoring system, and rewards.</p>
+                        
+                        <div class="flex flex-wrap">
+                            <span class="px-2 py-1 text-xs rounded-full bg-red-900 text-red-300 mr-2 mb-2">Minigame</span>
+                            <span class="px-2 py-1 text-xs rounded-full bg-red-900 text-red-300 mr-2 mb-2">Maps</span>
+                            <span class="px-2 py-1 text-xs rounded-full bg-red-900 text-red-300 mb-2">Rewards</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Example 5 -->
+                <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg">
+                    <div class="p-6">
+                        <h3 class="lang-de text-xl font-bold mb-3">Quests-System</h3>
+                        <p class="lang-de text-gray-400 mb-4">Ein flexibles Quest-System mit verschiedenen Aufgabentypen, NPC-Dialogen und Belohnungen.</p>
+                        
+                        <h3 class="lang-en hidden text-xl font-bold mb-3">Quests System</h3>
+                        <p class="lang-en hidden text-gray-400 mb-4">A flexible quest system with various task types, NPC dialogues, and rewards.</p>
+                        
+                        <div class="flex flex-wrap">
+                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-900 text-yellow-300 mr-2 mb-2">Quests</span>
+                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-900 text-yellow-300 mr-2 mb-2">NPCs</span>
+                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-900 text-yellow-300 mb-2">Progression</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Example 6 -->
+                <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg">
+                    <div class="p-6">
+                        <h3 class="lang-de text-xl font-bold mb-3">Admin-Tools</h3>
+                        <p class="lang-de text-gray-400 mb-4">Ein Paket von Admin-Werkzeugen für einfachere Serververwaltung und Moderation.</p>
+                        
+                        <h3 class="lang-en hidden text-xl font-bold mb-3">Admin Tools</h3>
+                        <p class="lang-en hidden text-gray-400 mb-4">A package of admin tools for easier server management and moderation.</p>
+                        
+                        <div class="flex flex-wrap">
+                            <span class="px-2 py-1 text-xs rounded-full bg-pink-900 text-pink-300 mr-2 mb-2">Admin</span>
+                            <span class="px-2 py-1 text-xs rounded-full bg-pink-900 text-pink-300 mr-2 mb-2">Moderation</span>
+                            <span class="px-2 py-1 text-xs rounded-full bg-pink-900 text-pink-300 mb-2">Utilities</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="py-20 bg-stone">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h2 class="lang-de text-3xl font-bold mb-6">Über Steyonde</h2>
+                    <h2 class="lang-en hidden text-3xl font-bold mb-6">About Steyonde</h2>
+                    <div class="w-24 h-1 bg-blue-600 mb-6"></div>
+                    <p class="lang-de text-gray-400 mb-6">Wir sind ein kleines aber feines Entwicklerteam, das sich auf die Erstellung von kostenlosen, individuell angepassten Minecraft Plugins spezialisiert hat.</p>
+                    <p class="lang-de text-gray-400 mb-6">Unser Ziel ist es, kleinen Minecraft-Servern zu helfen, ihren Spielern ein einzigartiges Erlebnis zu bieten, ohne dafür teure Premium-Plugins kaufen zu müssen.</p>
+                    <p class="lang-de text-gray-400">Jedes Plugin, das wir entwickeln, ist einzigartig und speziell auf die Bedürfnisse und Vorstellungen unserer Kunden zugeschnitten. Bei uns gibt es keine "One-Size-Fits-All"-Lösungen.</p>
+                    
+                    <p class="lang-en hidden text-gray-400 mb-6">We are a small but excellent development team that specializes in creating free, individually customized Minecraft plugins.</p>
+                    <p class="lang-en hidden text-gray-400 mb-6">Our goal is to help small Minecraft servers offer their players a unique experience without having to buy expensive premium plugins.</p>
+                    <p class="lang-en hidden text-gray-400">Each plugin we develop is unique and specially tailored to the needs and ideas of our customers. We don't offer "one-size-fits-all" solutions.</p>
+                </div>
+                <div class="md:w-1/2 md:pl-10">
+                    <div class="bg-gray-800 p-8 rounded-xl">
+                        <h3 class="lang-de text-xl font-bold mb-6">Unser Team</h3>
+                        <h3 class="lang-en hidden text-xl font-bold mb-6">Our Team</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mr-4">
+                                    <span class="font-bold">M</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Max</h4>
+                                    <p class="lang-de text-sm text-gray-400">Lead Developer</p>
+                                    <p class="lang-en hidden text-sm text-gray-400">Lead Developer</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-blue-600 flex items-center justify-center mr-4">
+                                    <span class="font-bold">L</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Lisa</h4>
+                                    <p class="lang-de text-sm text-gray-400">UI/UX Designer</p>
+                                    <p class="lang-en hidden text-sm text-gray-400">UI/UX Designer</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-500 to-red-600 flex items-center justify-center mr-4">
+                                    <span class="font-bold">T</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Tim</h4>
+                                    <p class="lang-de text-sm text-gray-400">Backend Developer</p>
+                                    <p class="lang-en hidden text-sm text-gray-400">Backend Developer</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 animated-bg">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="lang-de text-3xl font-bold mb-6">Bereit für dein eigenes Plugin?</h2>
+            <p class="lang-de text-xl mb-10 max-w-2xl mx-auto">Lass uns gemeinsam das perfekte Plugin für deinen Server erstellen - völlig kostenlos!</p>
+            <a href="#contact" class="lang-de bg-white text-purple-900 hover:bg-gray-200 px-8 py-4 rounded-lg font-bold inline-block transition-all duration-300 shadow-lg hover:shadow-xl">
+                Über Discord anfragen
+            </a>
+            
+            <h2 class="lang-en hidden text-3xl font-bold mb-6">Ready for Your Own Plugin?</h2>
+            <p class="lang-en hidden text-xl mb-10 max-w-2xl mx-auto">Let's create the perfect plugin for your server together - completely free!</p>
+            <a href="#contact" class="lang-en hidden bg-white text-purple-900 hover:bg-gray-200 px-8 py-4 rounded-lg font-bold inline-block transition-all duration-300 shadow-lg hover:shadow-xl">
+                Request via Discord
+            </a>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gray-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="lang-de text-3xl font-bold mb-4">Kontaktiere uns</h2>
+                <h2 class="lang-en hidden text-3xl font-bold mb-4">Contact Us</h2>
+                <div class="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
+                <p class="lang-de max-w-2xl mx-auto text-gray-400">Du hast eine Idee für ein Plugin? Tritt unserem Discord-Server bei und erzähl uns davon!</p>
+                <p class="lang-en hidden max-w-2xl mx-auto text-gray-400">Do you have an idea for a plugin? Join our Discord server and tell us about it!</p>
+            </div>
+            <div class="max-w-2xl mx-auto">
+                <div class="bg-gray-800 p-10 rounded-xl text-center">
+                    <div class="w-24 h-24 bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fab fa-discord text-5xl"></i>
+                    </div>
+                    <h3 class="lang-de text-2xl font-bold mb-4">Plugin über Discord anfragen</h3>
+                    <p class="lang-de text-gray-400 mb-8">Die einfachste und schnellste Art, dein eigenes Plugin anzufragen! Unser Team steht bereit, um deine Ideen zu besprechen und umzusetzen.</p>
+                    
+                    <h3 class="lang-en hidden text-2xl font-bold mb-4">Request Plugin via Discord</h3>
+                    <p class="lang-en hidden text-gray-400 mb-8">The easiest and fastest way to request your own plugin! Our team is ready to discuss and implement your ideas.</p>
+                    
+                    <div class="mb-8">
+                        <h4 class="lang-de font-bold text-lg mb-2">So funktioniert's:</h4>
+                        <ol class="lang-de text-left text-gray-400 space-y-2 pl-6 list-decimal">
+                            <li>Tritt unserem Discord-Server bei</li>
+                            <li>Gehe zum #plugin-anfrage Kanal</li>
+                            <li>Beschreibe deine Plugin-Idee so detailliert wie möglich</li>
+                            <li>Unser Team meldet sich bei dir für weitere Details</li>
+                        </ol>
+                        
+                        <h4 class="lang-en hidden font-bold text-lg mb-2">How it works:</h4>
+                        <ol class="lang-en hidden text-left text-gray-400 space-y-2 pl-6 list-decimal">
+                            <li>Join our Discord server</li>
+                            <li>Go to the #plugin-request channel</li>
+                            <li>Describe your plugin idea in as much detail as possible</li>
+                            <li>Our team will contact you for further details</li>
+                        </ol>
+                    </div>
+                    <a href="#" class="lang-de bg-indigo-600 hover:bg-indigo-700 px-10 py-4 rounded-lg font-bold inline-block transition-all duration-300 shadow-lg hover:shadow-xl">
+                        <i class="fab fa-discord mr-2"></i> Unserem Discord beitreten
+                    </a>
+                    <a href="#" class="lang-en hidden bg-indigo-600 hover:bg-indigo-700 px-10 py-4 rounded-lg font-bold inline-block transition-all duration-300 shadow-lg hover:shadow-xl">
+                        <i class="fab fa-discord mr-2"></i> Join our Discord
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 py-12 border-t border-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-6 md:mb-0">
+                    <div class="w-10 h-10 rounded bg-gradient-to-br from-green-500 to-blue-600 mr-3 flex items-center justify-center">
+                        <span class="text-white font-bold text-xl">S</span>
+                    </div>
+                    <span class="text-xl font-bold">STEYONDE</span>
+                </div>
+                <div class="flex mb-6 md:mb-0 space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-discord text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                </div>
+                <div class="lang-de text-gray-500 text-sm">
+                    &copy; 2025 Steyonde Team. Alle Rechte vorbehalten.
+                </div>
+                <div class="lang-en hidden text-gray-500 text-sm">
+                    &copy; 2025 Steyonde Team. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Language Switcher
+        function setLanguage(lang) {
+            // Hide all language elements
+            document.querySelectorAll('.lang-de, .lang-en').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            // Show elements for selected language
+            document.querySelectorAll('.lang-' + lang).forEach(el => {
+                el.classList.remove('hidden');
+            });
+            
+            // Update active language buttons
+            document.querySelectorAll('#lang-de, #lang-en, #lang-de-mobile, #lang-en-mobile').forEach(el => {
+                el.classList.remove('lang-active');
+                el.classList.add('text-gray-400');
+            });
+            
+            document.querySelector('#lang-' + lang).classList.add('lang-active');
+            document.querySelector('#lang-' + lang).classList.remove('text-gray-400');
+            
+            document.querySelector('#lang-' + lang + '-mobile').classList.add('lang-active');
+            document.querySelector('#lang-' + lang + '-mobile').classList.remove('text-gray-400');
+            
+            // Update HTML lang attribute
+            document.documentElement.lang = lang;
+        }
+        
+        // Language button event listeners
+        document.getElementById('lang-de').addEventListener('click', function() {
+            setLanguage('de');
+        });
+        
+        document.getElementById('lang-en').addEventListener('click', function() {
+            setLanguage('en');
+        });
+        
+        document.getElementById('lang-de-mobile').addEventListener('click', function() {
+            setLanguage('de');
+        });
+        
+        document.getElementById('lang-en-mobile').addEventListener('click', function() {
+            setLanguage('en');
+        });
+        
+        // Mobile menu toggle
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+        
+        // Navigation active state on scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.clientHeight;
+                
+                if (pageYOffset >= sectionTop && pageYOffset < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('text-green-400');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('text-green-400');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
