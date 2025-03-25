@@ -506,10 +506,10 @@
                             <li>Our team will contact you for further details</li>
                         </ol>
                     </div>
-                    <a href="#" class="discord-btn lang-de bg-indigo-600 hover:bg-indigo-700 px-10 py-4 rounded-lg font-bold inline-block transition-all duration-300 shadow-lg hover:shadow-xl text-xl">
+                    <a href="#" class="lang-de bg-indigo-600 hover:bg-indigo-700 px-10 py-4 rounded-lg font-bold inline-block transition-all duration-300 shadow-lg hover:shadow-xl text-xl">
                         <i class="fab fa-discord mr-2"></i> Anfrage über Discord
                     </a>
-                    <a href="#" class="discord-btn lang-en hidden bg-indigo-600 hover:bg-indigo-700 px-10 py-4 rounded-lg font-bold inline-block transition-all duration-300 shadow-lg hover:shadow-xl text-xl">
+                    <a href="#" class="lang-en hidden bg-indigo-600 hover:bg-indigo-700 px-10 py-4 rounded-lg font-bold inline-block transition-all duration-300 shadow-lg hover:shadow-xl text-xl">
                         <i class="fab fa-discord mr-2"></i> Request via Discord
                     </a>
                 </div>
@@ -551,11 +551,9 @@
     <script>
         // Language Switcher
         function setLanguage(lang) {
-            // Hide all language elements
+            // Hide all language elements first
             document.querySelectorAll('.lang-de, .lang-en').forEach(el => {
-                if (!el.classList.contains('discord-btn')) {
-                    el.classList.add('hidden');
-                }
+                el.classList.add('hidden');
             });
             
             // Show elements for selected language
@@ -577,14 +575,6 @@
             
             // Update HTML lang attribute
             document.documentElement.lang = lang;
-            
-            // Handle Discord buttons specifically
-            document.querySelectorAll('.discord-btn').forEach(btn => {
-                btn.classList.add('hidden');
-            });
-            document.querySelectorAll('.discord-btn.lang-' + lang).forEach(btn => {
-                btn.classList.remove('hidden');
-            });
         }
         
         // Language button event listeners
